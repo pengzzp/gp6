@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			body{
+				background:black;
+			}
+			*{
+				padding: 0;
+				margin: 0;
+			}
+			ul{
+				width: 100%;
+				height: auto;
+				margin:0 auto;
+			}
+			ul:after{
+			    content: "";
+			    display: block;
+			    clear:both;
+			}
+			ul li{
+				width: 15%;
+				height: 350px;
+				float: left;
+				margin-left: 50px;
+				margin-top: 20px;
+				overflow: hidden;
+				position: relative;
+				box-shadow: 0 0 15px white;
+				color: white;
+			}
+			ul li img{
+				width: 100%;
+			}
+			ul li img:hover{
+				transform: scale(1.2);
+				transition: all 1s;
+			}
+			ul li h2{
+				width: 100%;
+				height: 30px;
+				font-size: 14px;
+				text-overflow:ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
+			}
+			ul li button{
+				width: 100%;
+				height: 30px;
+				position: absolute;
+				bottom: 0;
+				border: none;
+		</style>
+	</head>
+	<body>
+		<ul>
+			<li>
+				<img src="http://s3.mogucdn.com/mlcdn/c45406/170812_1681d212lc7ih5el6h9cfcfj86k4f_640x960.jpg"/>
+				<h2>xxxxxxxxxxxxxxxxxxxxxxxxxxxxx</h2>
+				<button>购买</button>
+			</li>
+		</ul>
+		
+		<script src="js/jquery-3.3.1.js"></script>
+		<script type="text/javascript">
+			function goods(url,main){
+                this.url = url;
+                this.main= $(main);
+                if(!url||!main) return;
+                this.init();
+            }
+            goods.prototype = {
+                constructor:goods,
+                init(){
+                    this.get_data()
+                    .then(function(res){
+                    	//得到数据后渲染界面
+                          this.json=res.data.list;
+//                        console.log(this.json)
+                          this.render();
+                    }.bind(this));
+
+                },
+//获取数据
+                get_data(){
+                    this.opt = {
+                        url:this.url,
+                        dataType:"jsonp",
+                    };
+                    return $.ajax(this.opt)
+                },
+//渲染界面
+                render(){
+                	this.html="";
+                	$.each(this.json,function(index,item){
+                		this.html+=
+                				`<li>
+									<img src=${item.image}>
+									<h2>${item.title}</h2>
+									<button data-id=${item.userId}>购买</button>
+								</li>`
+                	}.bind(this));
+                	this.main.html(this.html);
+                }
+            }
+
+			new goods("http://mce.meilishuo.com/jsonp/get/3?offset=0&frame=1&trace=0&limit=10&endId=0&pid=106888&_=1526528205879","ul");
+		</script>
+	</body>
+</html>
